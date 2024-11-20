@@ -8,6 +8,7 @@
 #pragma once
 #include <inttypes.h>
 #include <limits.h>
+#include <unistd.h>
 
 /**
  * @brief Port to be used by the server socket
@@ -17,6 +18,7 @@
  * @note This value is declared in main.c.
  */
 extern uint16_t port;
+extern volatile sig_atomic_t running;
 
 /**
  * @brief Prints out a formatted error message to stdout with a newline and exits with error code 1.
@@ -26,3 +28,5 @@ extern uint16_t port;
 void exit_error(const char *error_msg, ...);
 
 void handle_args(int argc, char const **argv);
+
+void signal_handler(int signal);
