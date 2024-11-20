@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <signal.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <unistd.h>

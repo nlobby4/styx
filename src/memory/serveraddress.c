@@ -9,6 +9,9 @@ sockaddr_in_p make_ipv4(const char *ip, uint16_t port)
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
-    inet_pton(AF_INET, ip, &addr.sin_addr.s_addr);
+    if (ip)
+        inet_pton(AF_INET, ip, &addr.sin_addr.s_addr);
+    else
+        addr.sin_addr.s_addr = INADDR_ANY;
     return &addr;
 }

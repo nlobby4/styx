@@ -8,6 +8,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <sys/select.h>
+#include <sys/time.h>
 #include "utils.h"
 #include "types.h"
 #include "mem.h"
@@ -15,6 +17,8 @@
 #define BUF_SIZE 4096
 #define TCP 0
 #define LOCALHOST "127.0.0.1"
+#define TIMEOUT 3000
+#define MAX_CLIENTS 10
 uint16_t port;
 volatile sig_atomic_t running = 1;
 
@@ -32,7 +36,11 @@ int main(int argc, char const *argv[])
     }
     // set server struct
     sockaddr_in_p addr = make_ipv4(LOCALHOST, port);
-    socklen_t addr_len = sizeof(*addr);
+    // initialize client struct
+    struct sockaddr_in client_addr;
+    socklen_t addr_len = sizeof(struct sockaddr_in);
+    memset(&client_addr, 0, sizeof(client_addr));
+    // bind server to socket and listen
     if (bind(server, (struct sockaddr *)addr, sizeof(*addr)) == -1)
     {
         close(server);
@@ -43,11 +51,22 @@ int main(int argc, char const *argv[])
         close(server);
         exit_error("Error with listen()");
     }
+    // Start interrupt handler
+    signal(SIGINT, signal_handler);
     while (running)
     {
-        // TODO: Handle blocking by accept() and handle connections
-        signal(SIGINT, signal_handler);
-        file_descriptor connection = accept(server, (struct sockaddr *)addr, &addr_len);
+        fd_set read_fds;
+        FD_ZERO(&read_fds);
+        FD_SET(server, &read_fds);
+        // 1 for 1 second interval, 0 for 0 (additional) nanoseconds;
+        struct timeval interval = {1, 0};
+        int ret = select(server + 1, &read_fds, NULL, NULL, &interval);
+        if (ret <= 0 || !FD_ISSET(server, &read_fds))
+        {
+            puts("Timeout");
+            continue;
+        }
+        file_descriptor connection = accept(server, (struct sockaddr *)&client_addr, &addr_len);
         if (connection == -1)
         {
             perror("Error with accept(). Check connection.\n");
@@ -62,12 +81,14 @@ int main(int argc, char const *argv[])
         if (id == 0)
         {
             close(server);
-            // Do stuff
+            // TODO: Handle connections
             close(connection);
             return 0;
         }
         else
+        {
             close(connection);
+        }
     }
     if (id != 0)
         close(server);

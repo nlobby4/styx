@@ -3,6 +3,6 @@
 
 void signal_handler(int signal)
 {
-    printf("Received signal %d; shutting down...\n", signal);
+    // printf("\nShutting down...\n");
     running = 0;
 }
