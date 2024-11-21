@@ -10,7 +10,6 @@
 #include <stdarg.h>
 #include <sys/select.h>
 #include <sys/time.h>
-#include <cjson/cJSON.h>
 #include "utils.h"
 #include "types.h"
 #include "mem.h"

@@ -28,6 +28,8 @@ extern volatile sig_atomic_t running;
  */
 void exit_error(const char *error_msg, ...);
 
+void warning(const char *warning, ...);
+
 void handle_args(int argc, char const **argv);
 
 void signal_handler(int signal);
