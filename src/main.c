@@ -10,17 +10,17 @@
 #include <stdarg.h>
 #include <sys/select.h>
 #include <sys/time.h>
+#include <cjson/cJSON.h>
 #include "utils.h"
 #include "types.h"
 #include "mem.h"
+#include "config.h"
 // https://nmon.sourceforge.io/pmwiki.php?n=Site.Nweb
-#define BUF_SIZE 4096
 #define TCP 0
-#define LOCALHOST "127.0.0.1"
-#define TIMEOUT 3000
 #define MAX_CLIENTS 10
 uint16_t port;
 volatile sig_atomic_t running = 1;
+// TODO: Handle errno properly
 
 int main(int argc, char const *argv[])
 {
@@ -35,8 +35,8 @@ int main(int argc, char const *argv[])
         exit_error("Server socket error");
     }
     // set server struct
-    sockaddr_in_p addr = make_ipv4(LOCALHOST, port);
-    // initialize client struct
+    sockaddr_in_p addr = make_ipv4("127.0.0.1", port);
+    // initialize client struct and its length
     struct sockaddr_in client_addr;
     socklen_t addr_len = sizeof(struct sockaddr_in);
     memset(&client_addr, 0, sizeof(client_addr));
@@ -81,7 +81,7 @@ int main(int argc, char const *argv[])
         if (id == 0)
         {
             close(server);
-            // TODO: Handle connections
+
             close(connection);
             return 0;
         }
