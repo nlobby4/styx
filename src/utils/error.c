@@ -16,9 +16,9 @@ void exit_error(const char *error_msg, ...)
     vfprintf(stderr, error_msg, list);
     fputc('\n', stderr);
     va_end(list);
-    if (server)
+    if (server != -1 && server != 0)
         close(server);
-    if (connection)
+    if (connection != -1 && connection != 0)
         close(connection);
     exit(1);
 }

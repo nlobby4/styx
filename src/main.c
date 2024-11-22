@@ -18,9 +18,8 @@
 #define TCP 0
 #define MAX_CLIENTS 10
 #define DEFAULT_PATH "serverconfig.json"
-uint16_t port;
 volatile sig_atomic_t running = 1;
-file_descriptor server, connection;
+file_descriptor server = 0, connection = 0;
 
 int main(int argc, char const *argv[])
 {
@@ -28,6 +27,7 @@ int main(int argc, char const *argv[])
     const char *file_path = handle_args(argc, argv);
     //  listener socket and connection socket
     //  getting the fd from the socket() syscall using IPv4 and TCP
+
     server = socket(AF_INET, SOCK_STREAM, TCP);
     if (server == -1)
     {
@@ -43,17 +43,19 @@ int main(int argc, char const *argv[])
     // bind server to socket and listen
     if (bind(server, (struct sockaddr *)addr, sizeof(*addr)) == -1)
     {
-        exit_error("bind() failed");
+        free(config);
+        exit_error("cannot bind to port %u", ntohs(addr->sin_port));
     }
     if (listen(server, config->max_clients) == -1)
     {
+        free(config);
         exit_error("listen() failed");
     }
     buffers *bufs = make_buffers(config);
-    struct timeval interval = {1, 0};
+    struct timeval interval = {config->timeout_s, 0};
+    // Start interrupt handler
     free(config);
     config = NULL;
-    // Start interrupt handler
     signal(SIGINT, signal_handler);
     while (running)
     {
@@ -62,27 +64,30 @@ int main(int argc, char const *argv[])
         FD_SET(server, &read_fds);
         // 1 for 1 second interval, 0 for 0 (additional) nanoseconds;
         int ret = select(server + 1, &read_fds, NULL, NULL, &interval);
-        if (ret <= 0 || !FD_ISSET(server, &read_fds))
+        if (ret == -1)
         {
-            puts("Timeout");
-            continue;
+            free_bufs(bufs);
+            exit_error("select failed");
         }
+        if (ret == 0 || !FD_ISSET(server, &read_fds))
+            continue;
         connection = accept(server, (struct sockaddr *)&client_addr, &addr_len);
         if (connection == -1)
         {
-            perror("Error with accept(). Check connection.\n");
+            warning("connection failed.");
             continue;
         }
         id = fork();
         if (id == -1)
         {
-            perror("Error with fork(). Closing connection.\n");
+            warning("could not fork. Closing connection.");
+            close(connection);
             continue;
         }
         if (id == 0)
         {
             close(server);
-
+            // TODO: Handle connectino
             close(connection);
             goto end;
         }

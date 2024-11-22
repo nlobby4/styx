@@ -4,9 +4,13 @@
 typedef struct
 {
     char *recv_head;
+    long recv_head_sz;
     char *recv_body;
+    long recv_body_sz;
     char *resp_head;
+    long resp_head_sz;
     char *resp_body;
+    long resp_body_sz;
 } buffers;
 /**
  * @brief Creates and returns a pointer to a ipv4 socket address struct.
