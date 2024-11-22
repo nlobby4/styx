@@ -139,14 +139,14 @@ static void assign_vals(server_config *config, cJSON *json)
         exit_error("json incomplete. Expected format: %s", json_format);
     }
 }
-server_config *load_config()
+server_config *load_config(const char *file_name)
 {
     server_config *config = calloc(1, sizeof(*config));
     if (!config)
     {
         exit_error("malloc() failed in load_config() for config");
     }
-    FILE *file = fopen("serverconfig.json", "r");
+    FILE *file = fopen(file_name, "r");
     if (!file)
     {
         exit_error("serverconfig.json cannot be opened");
@@ -160,7 +160,7 @@ server_config *load_config()
     }
     if (buf_size == 0 || buf_size == -1)
     {
-        exit_error("File empty / ftell() failed");
+        exit_error("file empty / ftell() failed");
     }
     rewind(file);
     buf[buf_size - 1] = '\0';

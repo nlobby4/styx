@@ -6,6 +6,8 @@
     "stdlib.h": "c",
     "netdb.h": "c",
     "cjson.h": "c",
-    "select.h": "c"
+    "select.h": "c",
+    "utils.h": "c",
+    "types.h": "c"
   }
 }

@@ -25,4 +25,4 @@ typedef struct
     int max_clients;
 } server_config;
 
-server_config *load_config(void);
+server_config *load_config(const char *file_name);

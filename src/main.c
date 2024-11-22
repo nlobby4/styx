@@ -17,24 +17,25 @@
 // https://nmon.sourceforge.io/pmwiki.php?n=Site.Nweb
 #define TCP 0
 #define MAX_CLIENTS 10
+#define DEFAULT_PATH "serverconfig.json"
 uint16_t port;
 volatile sig_atomic_t running = 1;
-// TODO: Handle errno properly
+file_descriptor server, connection;
 
 int main(int argc, char const *argv[])
 {
     pid_t id = getpid();
-    handle_args(argc, argv);
-    // listener socket and connection socket
-    // getting the fd from the socket() syscall using IPv4 and TCP
-    file_descriptor server = socket(AF_INET, SOCK_STREAM, TCP);
+    const char *file_path = handle_args(argc, argv);
+    //  listener socket and connection socket
+    //  getting the fd from the socket() syscall using IPv4 and TCP
+    server = socket(AF_INET, SOCK_STREAM, TCP);
     if (server == -1)
     {
-        close(server);
         exit_error("Server socket error");
     }
+    server_config *config = load_config(file_path ? file_path : DEFAULT_PATH);
     // set server struct
-    sockaddr_in_p addr = make_ipv4("127.0.0.1", port);
+    sockaddr_in_p addr = make_ipv4(config);
     // initialize client struct and its length
     struct sockaddr_in client_addr;
     socklen_t addr_len = sizeof(struct sockaddr_in);
@@ -42,14 +43,16 @@ int main(int argc, char const *argv[])
     // bind server to socket and listen
     if (bind(server, (struct sockaddr *)addr, sizeof(*addr)) == -1)
     {
-        close(server);
-        exit_error("Error with bind()");
+        exit_error("bind() failed");
     }
-    if (listen(server, 10) == -1)
+    if (listen(server, config->max_clients) == -1)
     {
-        close(server);
-        exit_error("Error with listen()");
+        exit_error("listen() failed");
     }
+    buffers *bufs = make_buffers(config);
+    struct timeval interval = {1, 0};
+    free(config);
+    config = NULL;
     // Start interrupt handler
     signal(SIGINT, signal_handler);
     while (running)
@@ -58,14 +61,13 @@ int main(int argc, char const *argv[])
         FD_ZERO(&read_fds);
         FD_SET(server, &read_fds);
         // 1 for 1 second interval, 0 for 0 (additional) nanoseconds;
-        struct timeval interval = {1, 0};
         int ret = select(server + 1, &read_fds, NULL, NULL, &interval);
         if (ret <= 0 || !FD_ISSET(server, &read_fds))
         {
             puts("Timeout");
             continue;
         }
-        file_descriptor connection = accept(server, (struct sockaddr *)&client_addr, &addr_len);
+        connection = accept(server, (struct sockaddr *)&client_addr, &addr_len);
         if (connection == -1)
         {
             perror("Error with accept(). Check connection.\n");
@@ -82,7 +84,7 @@ int main(int argc, char const *argv[])
             close(server);
 
             close(connection);
-            return 0;
+            goto end;
         }
         else
         {
@@ -91,5 +93,7 @@ int main(int argc, char const *argv[])
     }
     if (id != 0)
         close(server);
+end:
+    free_bufs(bufs);
     return 0;
 }

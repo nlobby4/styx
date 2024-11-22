@@ -7,6 +7,7 @@
 
 #pragma once
 #include <signal.h>
+#include "types.h"
 #include <inttypes.h>
 #include <limits.h>
 #include <unistd.h>
@@ -18,8 +19,8 @@
  *
  * @note This value is declared in main.c.
  */
-extern uint16_t port;
 extern volatile sig_atomic_t running;
+extern file_descriptor server, connection;
 
 /**
  * @brief Prints out a formatted error message to stdout with a newline and exits with error code 1.
@@ -30,6 +31,6 @@ void exit_error(const char *error_msg, ...);
 
 void warning(const char *warning, ...);
 
-void handle_args(int argc, char const **argv);
+const char *handle_args(int argc, char const **argv);
 
 void signal_handler(int signal);
