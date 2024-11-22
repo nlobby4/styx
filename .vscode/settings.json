@@ -5,6 +5,7 @@
     "stdarg.h": "c",
     "stdlib.h": "c",
     "netdb.h": "c",
-    "cjson.h": "c"
+    "cjson.h": "c",
+    "select.h": "c"
   }
 }

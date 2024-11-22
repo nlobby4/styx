@@ -26,4 +26,3 @@ typedef struct
 } server_config;
 
 server_config *load_config(void);
-void free_config(server_config *config);
