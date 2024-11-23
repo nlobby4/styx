@@ -66,8 +66,17 @@ int main(int argc, char const *argv[])
         int ret = select(server + 1, &read_fds, NULL, NULL, &interval);
         if (ret == -1)
         {
-            free_bufs(bufs);
-            exit_error("select failed");
+            if (running)
+            {
+                free_bufs(bufs);
+                exit_error("select failed");
+            }
+            else
+            {
+                printf("\nClosing server...\n");
+                close(server);
+                goto end;
+            }
         }
         if (ret == 0 || !FD_ISSET(server, &read_fds))
             continue;

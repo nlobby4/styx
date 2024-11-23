@@ -11,7 +11,7 @@
 #define TIMEOUT (1 << 6)
 #define CLIENTS (1 << 7)
 #define IS_DUP(flags, mask) (flags & mask)
-#define SET_FLAG(flags, mask) (flags != mask)
+#define SET_FLAG(flags, mask) (flags |= mask)
 
 typedef struct
 {

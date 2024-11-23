@@ -27,6 +27,8 @@ void warning(const char *warning, ...)
 {
     va_list list;
     va_start(list, warning);
+    if (errno)
+        errno = 0;
     printf("\033[1;35mWARNING:\033[0m ");
     vprintf(warning, list);
     putchar('\n');

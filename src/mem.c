@@ -24,6 +24,7 @@ sockaddr_in_p make_ipv4(server_config *config)
 buffers *make_buffers(server_config *config)
 {
     static buffers bufs;
+    memset(&bufs, 0, sizeof(bufs));
     bufs.recv_head_sz = config->recv_header_sz;
     bufs.recv_body_sz = config->recv_body_sz;
     bufs.resp_head_sz = config->resp_header_sz;
@@ -43,24 +44,12 @@ buffers *make_buffers(server_config *config)
 
 void free_bufs(buffers *bufs)
 {
-    if (bufs->recv_head)
-    {
-        free(bufs->recv_head);
-        bufs->recv_head = NULL;
-    }
-    if (bufs->recv_body)
-    {
-        free(bufs->recv_body);
-        bufs->recv_body = NULL;
-    }
-    if (bufs->resp_head)
-    {
-        free(bufs->resp_head);
-        bufs->resp_head = NULL;
-    }
-    if (bufs->resp_body)
-    {
-        free(bufs->resp_body);
-        bufs->resp_body = NULL;
-    }
+    free(bufs->recv_head);
+    bufs->recv_head = NULL;
+    free(bufs->recv_body);
+    bufs->recv_body = NULL;
+    free(bufs->resp_head);
+    bufs->resp_head = NULL;
+    free(bufs->resp_body);
+    bufs->resp_body = NULL;
 }
