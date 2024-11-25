@@ -8,9 +8,6 @@
 #pragma once
 #include <signal.h>
 #include "types.h"
-#include <inttypes.h>
-#include <limits.h>
-#include <unistd.h>
 
 /**
  * @brief Port to be used by the server socket

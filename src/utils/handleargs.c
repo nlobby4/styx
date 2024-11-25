@@ -1,5 +1,5 @@
 #include "utils.h"
-#include <stdlib.h>
+#include <stddef.h>
 
 const char *handle_args(int argc, char const **argv)
 {
