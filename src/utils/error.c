@@ -24,14 +24,14 @@ void exit_error(const char *error_msg, ...)
     exit(1);
 }
 
-void warning(const char *warning, ...)
+void warning(const char *warning_msg, ...)
 {
     va_list list;
-    va_start(list, warning);
+    va_start(list, warning_msg);
     if (errno)
         errno = 0;
     printf("\033[1;35mWARNING:\033[0m ");
-    vprintf(warning, list);
+    vprintf(warning_msg, list);
     putchar('\n');
     va_end(list);
 }

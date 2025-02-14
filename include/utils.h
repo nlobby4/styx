@@ -10,14 +10,20 @@
 #include "types.h"
 
 /**
- * @brief Port to be used by the server socket
+ * @brief Main loop run condition
  *
- * Stores a value between 1-65535.
- *
- * @note This value is declared in main.c.
+ * Set to 1 to run, 0 to stop.
+ * @note Important for clean up
  */
 extern volatile sig_atomic_t running;
-extern file_descriptor server, connection;
+/**
+ * @brief Global file descriptor for the listener socket
+ */
+extern file_descriptor server;
+/**
+ * @brief Global file descriptor for the connection socket
+ */
+extern file_descriptor connection;
 
 /**
  * @brief Prints out a formatted error message to stdout with a newline and exits with error code 1.
@@ -26,8 +32,24 @@ extern file_descriptor server, connection;
  */
 void exit_error(const char *error_msg, ...);
 
-void warning(const char *warning, ...);
+/**
+ * @brief Emits a formatted warning message to stdout with a newline.
+ * @param warning_msg A pointer to the unformatted message to be printed.
+ * @param ... The variable arguments that help format the message.
+ */
+void warning(const char *warning_msg, ...);
 
+/**
+ * @brief Checks if the given arguments are valid. If not, exits with an error message.
+ *
+ */
 const char *handle_args(int argc, char const **argv);
 
+/**
+ * @brief Callback function for signal handling.
+ * If the given signal is SIGINT, the main loop is exited
+ * via the global running variable, thus initializing cleanup
+ * and stopping the server.
+ * @param signal Input signal
+ */
 void signal_handler(int signal);

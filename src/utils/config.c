@@ -44,7 +44,10 @@ static void map_vals(server_config *config, cJSON *json)
                 free_ressources(config, origin);
                 exit_error("Invalid attribute in json. Expected format: %s", json_format);
             }
-            IS_DUP(flags, ADDR) ? warning("ip address set twice") : SET_FLAG(flags, ADDR);
+            if (IS_DUP(flags, ADDR))
+                warning("ip address set twice");
+            else
+                SET_FLAG(flags, ADDR);
             strncpy(config->addr, json->valuestring, 15);
             break;
         case cJSON_Number:
@@ -57,7 +60,10 @@ static void map_vals(server_config *config, cJSON *json)
 
             if (!strcmp(json->string, "port"))
             {
-                IS_DUP(flags, PORT) ? warning("port set twice") : SET_FLAG(flags, PORT);
+                if (IS_DUP(flags, PORT))
+                    warning("port set twice");
+                else
+                    SET_FLAG(flags, PORT);
                 if (numval < 1 || numval > UINT16_MAX)
                 {
                     free_ressources(config, origin);
@@ -67,27 +73,43 @@ static void map_vals(server_config *config, cJSON *json)
             }
             else if (!strcmp(json->string, "recv_header_sz"))
             {
-                IS_DUP(flags, RECV_HEAD) ? warning("recv_header_sz set twice") : SET_FLAG(flags, RECV_HEAD);
+                if (IS_DUP(flags, RECV_HEAD))
+                    warning("recv_header_sz set twice");
+                else
+                    SET_FLAG(flags, RECV_HEAD);
                 config->recv_header_sz = numval;
             }
             else if (!strcmp(json->string, "recv_body_sz"))
             {
-                IS_DUP(flags, RECV_BODY) ? warning("recv_body_sz set twice") : SET_FLAG(flags, RECV_BODY);
+                if (IS_DUP(flags, RECV_BODY))
+                    warning("recv_body_sz set twice");
+                else
+                    SET_FLAG(flags, RECV_BODY);
                 config->recv_body_sz = numval;
             }
             else if (!strcmp(json->string, "resp_header_sz"))
             {
-                IS_DUP(flags, RESP_HEAD) ? warning("resp_header_sz set twice") : SET_FLAG(flags, RESP_HEAD);
+                if (IS_DUP(flags, RESP_HEAD))
+                    warning("resp_header_sz set twice");
+                else
+                    SET_FLAG(flags, RESP_HEAD);
+
                 config->resp_header_sz = numval;
             }
             else if (!strcmp(json->string, "resp_body_sz"))
             {
-                IS_DUP(flags, RESP_BODY) ? warning("resp_body_sz set twice") : SET_FLAG(flags, RESP_BODY);
+                if (IS_DUP(flags, RESP_BODY))
+                    warning("resp_body_sz set twice");
+                else
+                    SET_FLAG(flags, RESP_BODY);
                 config->resp_body_sz = numval;
             }
             else if (!strcmp(json->string, "timeout_s"))
             {
-                IS_DUP(flags, TIMEOUT) ? warning("timeout_s set twice") : SET_FLAG(flags, TIMEOUT);
+                if (IS_DUP(flags, TIMEOUT))
+                    warning("timeout_s set twice");
+                else
+                    SET_FLAG(flags, TIMEOUT);
                 config->timeout_s = numval;
             }
             else if (!strcmp(json->string, "max_clients"))
@@ -97,7 +119,10 @@ static void map_vals(server_config *config, cJSON *json)
                     free_ressources(config, origin);
                     exit_error("max_clients can't be zero or less");
                 }
-                IS_DUP(flags, CLIENTS) ? warning("max_clients set twice") : SET_FLAG(flags, CLIENTS);
+                if (IS_DUP(flags, CLIENTS))
+                    warning("max_clients set twice");
+                else
+                    SET_FLAG(flags, CLIENTS);
                 if (numval > INT_MAX)
                 {
                     free_ressources(config, origin);

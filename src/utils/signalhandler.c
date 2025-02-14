@@ -2,5 +2,6 @@
 
 void signal_handler(int signal)
 {
-    running = 0;
+    if (signal == SIGINT)
+        running = 0;
 }
