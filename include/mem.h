@@ -1,17 +1,25 @@
 #pragma once
 #include "types.h"
 #include "config.h"
+
 typedef struct
 {
-    char *recv_head;
-    long recv_head_sz;
-    char *recv_body;
-    long recv_body_sz;
-    char *resp_head;
-    long resp_head_sz;
-    char *resp_body;
-    long resp_body_sz;
-} buffers;
+    char *payload;
+    long size;
+} buffer;
+
+typedef struct
+{
+    buffer head;
+    buffer body;
+} message;
+
+typedef struct
+{
+    message recv;
+    message resp;
+} message_buffers;
+
 /**
  * @brief Creates and returns a pointer to a ipv4 socket address struct.
  * @param ip IPv4 Address in dotted notation.
@@ -21,5 +29,5 @@ typedef struct
  */
 sockaddr_in_p make_ipv4(server_config *config);
 
-buffers *make_buffers(server_config *config);
-void free_bufs(buffers *bufs);
+message_buffers *make_buffers(server_config *config);
+void free_bufs(message_buffers *bufs);

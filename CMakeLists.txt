@@ -11,9 +11,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(cjson)
 # Recursively collect all .c files in the src directory and its subdirectories
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.c)
+set(CMAKE_C_EXTENSIONS ON)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
 add_compile_options(-Wall -Werror -pedantic)
 
 add_executable(${PROJECT_NAME} ${SOURCES})

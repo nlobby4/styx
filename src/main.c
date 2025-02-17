@@ -16,7 +16,6 @@
 #include "config.h"
 // https://nmon.sourceforge.io/pmwiki.php?n=Site.Nweb
 #define TCP 0
-#define MAX_CLIENTS 10
 #define DEFAULT_PATH "serverconfig.json"
 volatile sig_atomic_t running = 1;
 file_descriptor server = 0, connection = 0;
@@ -51,7 +50,7 @@ int main(int argc, char const *argv[])
         free(config);
         exit_error("listen() failed");
     }
-    buffers *bufs = make_buffers(config);
+    message_buffers *bufs = make_buffers(config);
     struct timeval interval = {config->timeout_s, 0};
     // Start interrupt handler
     free(config);
