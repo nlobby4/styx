@@ -10,6 +10,7 @@
     "utils.h": "c",
     "types.h": "c",
     "signal.h": "c",
-    "config.h": "c"
+    "config.h": "c",
+    "regex.h": "c"
   }
 }

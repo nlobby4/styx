@@ -14,7 +14,7 @@
 #include "types.h"
 #include "mem.h"
 #include "config.h"
-// https://nmon.sourceforge.io/pmwiki.php?n=Site.Nweb
+
 #define TCP 0
 #define DEFAULT_PATH "serverconfig.json"
 volatile sig_atomic_t running = 1;
@@ -56,6 +56,7 @@ int main(int argc, char const *argv[])
     free(config);
     config = NULL;
     signal(SIGINT, signal_handler);
+    size_t total_recvsize = bufs->recv.head.size + bufs->recv.body.size + 1;
     while (running)
     {
         fd_set read_fds;
@@ -63,6 +64,9 @@ int main(int argc, char const *argv[])
         FD_SET(server, &read_fds);
         // 1 for 1 second interval, 0 for 0 (additional) nanoseconds;
         int ret = select(server + 1, &read_fds, NULL, NULL, &interval);
+        ssize_t bytes_read = 0;
+        char recv_buf[total_recvsize];
+        memset(recv_buf, 0, total_recvsize);
         if (ret == -1)
         {
             if (running)
@@ -95,7 +99,21 @@ int main(int argc, char const *argv[])
         if (id == 0)
         {
             close(server);
-            // TODO: Handle connectino
+            bytes_read = recv(connection, recv_buf, total_recvsize, 0);
+
+            if (bytes_read == -1)
+            {
+                warning("recv error");
+            }
+            else if (recv_buf[total_recvsize - 1] != '\0')
+            {
+                warning("too much data was sent");
+            }
+            else
+            {
+                // TODO: Handle connectino
+                printf("%s", recv_buf);
+            }
             close(connection);
             goto end;
         }
