@@ -1,5 +1,5 @@
-#include "header.h"
 #include <stdio.h>
+#include "debug.h"
 
 void print_data(header_data *data)
 {

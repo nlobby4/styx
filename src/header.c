@@ -21,17 +21,18 @@ static header make_header(char *line)
     if (!line)
         return NULL;
     regex_t regex;
-    int regi = regcomp(&regex, "^[[:alpha:]]+(-[a-zA-Z]+)*\\s*:\\s*\\S+$", REG_EXTENDED);
+    int regi = regcomp(&regex, "^[[:alpha:]]+(-[[:alpha:]]+)*\\s*:\\s*\\S+$", REG_EXTENDED);
     if (regi != 0)
     {
+        regfree(&regex);
         warning("unable to compile regex.");
         return NULL;
     }
     regi = regexec(&regex, line, 0, NULL, 0);
+    regfree(&regex);
     if (regi != 0)
     {
         warning("invalid header format: %s", line);
-        regfree(&regex);
         return NULL;
     }
     header head;
@@ -61,7 +62,7 @@ static header make_header(char *line)
     return head;
 }
 
-static void free_data(header_data *data)
+void free_data(header_data *data)
 {
     free(data->method);
     free(data->path);
@@ -116,7 +117,7 @@ header_data *parse(char *header_str)
     char *token = strtok_r(header_str, "\r\n", &saveptr);
     if (!token)
     {
-        printf("Invalid input.\n");
+        warning("Empty header.");
         return NULL;
     }
     meta_data(&data, token);
@@ -130,6 +131,9 @@ header_data *parse(char *header_str)
         list_item = list_item->next;
     }
     if ((void *)token != (void *)list_item)
+    {
+        free_data(&data);
         return NULL;
+    }
     return &data;
 }

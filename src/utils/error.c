@@ -12,8 +12,10 @@ void exit_error(const char *error_msg, ...)
     va_list list;
     va_start(list, error_msg);
     fprintf(stderr, "\033[1;31mERROR:\033[0m ");
+#ifndef TEST
     if (errno)
         perror(NULL);
+#endif
     vfprintf(stderr, error_msg, list);
     fputc('\n', stderr);
     va_end(list);
@@ -21,7 +23,9 @@ void exit_error(const char *error_msg, ...)
         close(server);
     if (connection != -1 && connection != 0)
         close(connection);
+#ifndef TEST
     exit(1);
+#endif
 }
 
 void warning(const char *warning_msg, ...)

@@ -19,3 +19,4 @@ typedef struct
 } header_data;
 
 header_data *parse(char *header_str);
+void free_data(header_data *data);

@@ -8,7 +8,7 @@
 #pragma once
 #include <signal.h>
 #include "types.h"
-
+#include <stdarg.h>
 /**
  * @brief Main loop run condition
  *
@@ -31,6 +31,23 @@ extern file_descriptor connection;
  * @param ... The variable arguments that help format the message.
  */
 void exit_error(const char *error_msg, ...);
+
+#ifndef TEST
+/**
+ * @brief Macro for returning from functions instead of crashing the program, when testing is enabled.
+ */
+#define EXIT_ERROR(returnval, msg, ...) (exit_error(msg __VA_OPT__(, ) __VA_ARGS__))
+#else
+/**
+ * @brief Macro for returning from functions instead of crashing the program, when testing is enabled.
+ */
+#define EXIT_ERROR(returnval, msg, ...)             \
+    do                                              \
+    {                                               \
+        exit_error(msg __VA_OPT__(, ) __VA_ARGS__); \
+        return returnval;                           \
+    } while (0)
+#endif
 
 /**
  * @brief Emits a formatted warning message to stdout with a newline.

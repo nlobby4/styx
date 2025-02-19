@@ -14,9 +14,12 @@
 #include "types.h"
 #include "mem.h"
 #include "config.h"
+#include "handleconn.h"
 
 #define TCP 0
 #define DEFAULT_PATH "serverconfig.json"
+#define TEMPBUF_SIZE(x, y) ((x > y ? x : y) + 1)
+
 volatile sig_atomic_t running = 1;
 file_descriptor server = 0, connection = 0;
 
@@ -50,13 +53,12 @@ int main(int argc, char const *argv[])
         free(config);
         exit_error("listen() failed");
     }
-    message_buffers *bufs = make_buffers(config);
+    message_buffers *bufs = setup_buffers(config);
     struct timeval interval = {config->timeout_s, 0};
-    // Start interrupt handler
     free(config);
     config = NULL;
+    // Start interrupt handler
     signal(SIGINT, signal_handler);
-    size_t total_recvsize = bufs->recv.head.size + bufs->recv.body.size + 1;
     while (running)
     {
         fd_set read_fds;
@@ -64,9 +66,6 @@ int main(int argc, char const *argv[])
         FD_SET(server, &read_fds);
         // 1 for 1 second interval, 0 for 0 (additional) nanoseconds;
         int ret = select(server + 1, &read_fds, NULL, NULL, &interval);
-        ssize_t bytes_read = 0;
-        char recv_buf[total_recvsize];
-        memset(recv_buf, 0, total_recvsize);
         if (ret == -1)
         {
             if (running)
@@ -75,11 +74,7 @@ int main(int argc, char const *argv[])
                 exit_error("select failed");
             }
             else
-            {
-                printf("\nClosing server...\n");
-                close(server);
-                goto end;
-            }
+                break;
         }
         if (ret == 0 || !FD_ISSET(server, &read_fds))
             continue;
@@ -97,26 +92,7 @@ int main(int argc, char const *argv[])
             continue;
         }
         if (id == 0)
-        {
-            close(server);
-            bytes_read = recv(connection, recv_buf, total_recvsize, 0);
-
-            if (bytes_read == -1)
-            {
-                warning("recv error");
-            }
-            else if (recv_buf[total_recvsize - 1] != '\0')
-            {
-                warning("too much data was sent");
-            }
-            else
-            {
-                // TODO: Handle connectino
-                printf("%s", recv_buf);
-            }
-            close(connection);
-            goto end;
-        }
+            handle_connection(server, connection, bufs);
         else
         {
             close(connection);
@@ -124,7 +100,6 @@ int main(int argc, char const *argv[])
     }
     if (id != 0)
         close(server);
-end:
-    free_bufs(bufs);
+    printf("\nClosing server...\n");
     return 0;
 }
