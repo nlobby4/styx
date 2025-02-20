@@ -1,20 +1,20 @@
-#include <stdio.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <arpa/inet.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdarg.h>
-#include <sys/select.h>
-#include <sys/time.h>
-#include "utils.h"
-#include "types.h"
-#include "mem.h"
 #include "config.h"
 #include "handleconn.h"
+#include "mem.h"
+#include "types.h"
+#include "utils.h"
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #define TCP 0
 #define DEFAULT_PATH "serverconfig.json"
@@ -23,83 +23,84 @@
 volatile sig_atomic_t running = 1;
 file_descriptor server = 0, connection = 0;
 
-int main(int argc, char const *argv[])
+int
+main (int argc, char const *argv[])
 {
-    pid_t id = getpid();
-    const char *file_path = handle_args(argc, argv);
-    //  listener socket and connection socket
-    //  getting the fd from the socket() syscall using IPv4 and TCP
+  pid_t id = getpid ();
+  const char *file_path = handle_args (argc, argv);
+  //  listener socket and connection socket
+  //  getting the fd from the socket() syscall using IPv4 and TCP
 
-    server = socket(AF_INET, SOCK_STREAM, TCP);
-    if (server == -1)
+  server = socket (AF_INET, SOCK_STREAM, TCP);
+  if (server == -1)
     {
-        exit_error("Server socket error");
+      exit_error ("Server socket error");
     }
-    server_config *config = load_config(file_path ? file_path : DEFAULT_PATH);
-    // set server struct
-    sockaddr_in_p addr = make_ipv4(config);
-    // initialize client struct and its length
-    struct sockaddr_in client_addr;
-    socklen_t addr_len = sizeof(struct sockaddr_in);
-    memset(&client_addr, 0, sizeof(client_addr));
-    // bind server to socket and listen
-    if (bind(server, (struct sockaddr *)addr, sizeof(*addr)) == -1)
+  server_config *config = load_config (file_path ? file_path : DEFAULT_PATH);
+  // set server struct
+  sockaddr_in_p addr = make_ipv4 (config);
+  // initialize client struct and its length
+  struct sockaddr_in client_addr;
+  socklen_t addr_len = sizeof (struct sockaddr_in);
+  memset (&client_addr, 0, sizeof (client_addr));
+  // bind server to socket and listen
+  if (bind (server, (struct sockaddr *)addr, sizeof (*addr)) == -1)
     {
-        free(config);
-        exit_error("cannot bind to port %u", ntohs(addr->sin_port));
+      free (config);
+      exit_error ("cannot bind to port %u", ntohs (addr->sin_port));
     }
-    if (listen(server, config->max_clients) == -1)
+  if (listen (server, config->max_clients) == -1)
     {
-        free(config);
-        exit_error("listen() failed");
+      free (config);
+      exit_error ("listen() failed");
     }
-    message_buffers *bufs = setup_buffers(config);
-    struct timeval interval = {config->timeout_s, 0};
-    free(config);
-    config = NULL;
-    // Start interrupt handler
-    signal(SIGINT, signal_handler);
-    while (running)
+  message_buffers *bufs = setup_buffers (config);
+  struct timeval interval = { config->timeout_s, 0 };
+  free (config);
+  config = NULL;
+  // Start interrupt handler
+  signal (SIGINT, signal_handler);
+  while (running)
     {
-        fd_set read_fds;
-        FD_ZERO(&read_fds);
-        FD_SET(server, &read_fds);
-        // 1 for 1 second interval, 0 for 0 (additional) nanoseconds;
-        int ret = select(server + 1, &read_fds, NULL, NULL, &interval);
-        if (ret == -1)
+      fd_set read_fds;
+      FD_ZERO (&read_fds);
+      FD_SET (server, &read_fds);
+      // 1 for 1 second interval, 0 for 0 (additional) nanoseconds;
+      int ret = select (server + 1, &read_fds, NULL, NULL, &interval);
+      if (ret == -1)
         {
-            if (running)
+          if (running)
             {
-                free_bufs(bufs);
-                exit_error("select failed");
+              free_bufs (bufs);
+              exit_error ("select failed");
             }
-            else
-                break;
+          else
+            break;
         }
-        if (ret == 0 || !FD_ISSET(server, &read_fds))
-            continue;
-        connection = accept(server, (struct sockaddr *)&client_addr, &addr_len);
-        if (connection == -1)
+      if (ret == 0 || !FD_ISSET (server, &read_fds))
+        continue;
+      connection = accept (server, (struct sockaddr *)&client_addr, &addr_len);
+      if (connection == -1)
         {
-            warning("connection failed.");
-            continue;
+          warning ("connection failed.");
+          continue;
         }
-        id = fork();
-        if (id == -1)
+      id = fork ();
+      if (id == -1)
         {
-            warning("could not fork. Closing connection.");
-            close(connection);
-            continue;
+          warning ("could not fork. Closing connection.");
+          close (connection);
+          continue;
         }
-        if (id == 0)
-            handle_connection(server, connection, bufs);
-        else
+      if (id == 0)
+        handle_connection (server, connection, bufs);
+      else
         {
-            close(connection);
+          close (connection);
         }
     }
-    if (id != 0)
-        close(server);
-    printf("\nClosing server...\n");
-    return 0;
+  if (id != 0)
+    close (server);
+  printf ("\nClosing server...\n");
+  return 0;
 }

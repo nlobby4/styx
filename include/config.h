@@ -1,6 +1,6 @@
 #pragma once
-#include <inttypes.h>
 #include "utils.h"
+#include <inttypes.h>
 #include <sys/time.h>
 #define PORT (1 << 0)
 #define ADDR (1 << 1)
@@ -15,14 +15,14 @@
 
 typedef struct
 {
-    uint16_t port;
-    char addr[16];
-    long recv_header_sz;
-    long recv_body_sz;
-    long resp_header_sz;
-    long resp_body_sz;
-    time_t timeout_s;
-    int max_clients;
+  uint16_t port;
+  char addr[16];
+  long recv_header_sz;
+  long recv_body_sz;
+  long resp_header_sz;
+  long resp_body_sz;
+  time_t timeout_s;
+  int max_clients;
 } server_config;
 
-server_config *load_config(const char *file_name);
+server_config *load_config (const char *file_name);
