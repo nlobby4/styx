@@ -35,6 +35,9 @@ set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG")
 set(CMAKE_C_FLAGS_RELEASE "-O2 -Werror -DNDEBUG")
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/setup)
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/utils)
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/run)
 target_include_directories(${PROJECT_NAME} PRIVATE ${cjson_SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME} cjson)
 
