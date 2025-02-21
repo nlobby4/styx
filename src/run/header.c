@@ -1,6 +1,6 @@
 #define _GNU_SOURCE
 #include "header.h"
-#include "utils.h"
+#include "error.h"
 #include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>

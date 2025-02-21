@@ -1,5 +1,6 @@
 #include "mem.h"
 #include "config.h"
+#include "globals.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 #include <stdio.h>

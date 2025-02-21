@@ -1,4 +1,5 @@
 #include "response.h"
+#include "globals.h"
 #include "stdbool.h"
 #include <stdio.h>
 #include <string.h>
@@ -29,7 +30,7 @@ send_response (message *response)
 static bool
 copy_into_buffer (buffer *buff, const char *msg)
 {
-  if (buff->size >= strlen (msg))
+  if ((size_t)buff->size >= strlen (msg))
     {
       warning ("message too big for buffer");
       return false;
@@ -41,7 +42,7 @@ copy_into_buffer (buffer *buff, const char *msg)
 static void
 empty_buffer (buffer *buff)
 {
-  *buff->payload = "";
+  *buff->payload = '\0';
 }
 
 static bool

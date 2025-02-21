@@ -1,5 +1,6 @@
+#include "error.h"
+#include "globals.h"
 #include "types.h"
-#include "utils.h"
 #include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -13,10 +14,6 @@ exit_error (const char *error_msg, ...)
   va_list list;
   va_start (list, error_msg);
   fprintf (stderr, "\033[1;31mERROR:\033[0m ");
-#ifndef TEST
-  if (errno)
-    perror (NULL);
-#endif
   vfprintf (stderr, error_msg, list);
   fputc ('\n', stderr);
   va_end (list);
@@ -25,6 +22,7 @@ exit_error (const char *error_msg, ...)
   if (connection != -1 && connection != 0)
     close (connection);
 #ifndef TEST
+  printf ("Closing Server...\n");
   exit (1);
 #endif
 }

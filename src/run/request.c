@@ -1,7 +1,12 @@
+#ifdef DEBUG
+#include "debug.h"
+#endif
+#include "globals.h"
 #include "header.h"
 #include "mem.h"
 #include "string.h"
 #include "types.h"
+#include <stdlib.h>
 
 header_data *
 request (message_buffers *bufs, status *code)
@@ -32,6 +37,9 @@ request (message_buffers *bufs, status *code)
   memmove (bufs->recv.body.payload, body_start, body_len);
   *body_start = '\0';
   header_data *data = parse (bufs->recv.head.payload);
+#ifdef DEBUG
+  print_data (data);
+#endif
   if (data == NULL)
     {
       *code = BAD_REQUEST;
@@ -72,8 +80,5 @@ request (message_buffers *bufs, status *code)
       bufs->recv.body.payload[content_length] = '\0';
     }
 
-#ifdef DEBUG
-  print_data (data);
-#endif
   return data;
 }

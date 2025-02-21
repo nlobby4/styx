@@ -1,6 +1,6 @@
 #include "config.h"
 #include "cJSON.h"
-#include "utils.h"
+#include "error.h"
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
