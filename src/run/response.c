@@ -7,6 +7,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifndef TEST
+#define STATIC "static"
+#else
+#define STATIC "tests/static"
+#endif
+
 #define HEADER(bufs) (&bufs->resp.head)
 #define BODY(bufs) (&bufs->resp.body)
 #define FORMAT_HEADER(http_code, msg) ("HTTP/1.1 " #http_code " " msg "\r\n")
@@ -102,9 +109,9 @@ get_mime_type (const char *path)
 static status
 buffer_read_file (buffer *body, const char *path)
 {
-  char correct_path[sizeof (char) * 6 + strlen (path) + 1];
+  char correct_path[sizeof (STATIC) + strlen (path) + 1];
   memset (correct_path, 0, sizeof (correct_path));
-  strcpy (correct_path, "static");
+  strcpy (correct_path, STATIC);
   strcat (correct_path, path);
   status s;
   if (!strcmp ("/", path))
@@ -116,7 +123,7 @@ buffer_read_file (buffer *body, const char *path)
   FILE *fp = fopen (correct_path, "r");
   if (fp == NULL)
     {
-      warning ("cannot open/find %s", correct_path);
+      warning ("cannot open / find %s", correct_path);
       return NOT_FOUND;
     }
   if (fseek (fp, 0, SEEK_END) == -1)
@@ -169,7 +176,9 @@ void
 response (message_buffers *bufs, header_data *request_data,
           connection_state *state)
 {
-
+  // request_data can be NULL
+  NULL_CHECK (bufs, );
+  NULL_CHECK (state, );
   bool result = false;
   char format_str[BUFSIZ] = { '\0' };
   char temp[BUFSIZ] = { '\0' };

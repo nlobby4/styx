@@ -11,6 +11,7 @@
 void
 run (message_buffers *bufs)
 {
+  NULL_CHECK (bufs, );
   struct timespec loop_limiter = { .tv_sec = 0, .tv_nsec = 10000 };
   while (running)
     {

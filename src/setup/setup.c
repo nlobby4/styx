@@ -10,6 +10,12 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#ifndef TEST
+#define STATIC "static"
+#else
+#define STATIC "tests/static"
+#endif
 #define TCP 0
 #define DEFAULT_PATH "serverconfig.json"
 
@@ -42,7 +48,7 @@ static bool
 static_exists ()
 {
   struct stat info;
-  return stat ("static", &info) == 0 && S_ISDIR (info.st_mode);
+  return stat (STATIC, &info) == 0 && S_ISDIR (info.st_mode);
 }
 message_buffers *
 setup (int argc, char const **argv)

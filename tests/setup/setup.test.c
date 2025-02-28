@@ -10,21 +10,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-static void
-_setup (void)
-{
-  setup_config (8080);
-}
-
-static void
-teardown (void)
-{
-  teardown_config ();
-}
-
-Test (_, globals_initialized, .init = _setup, .fini = teardown)
+Test (_, globals_initialized, .fini = teardown_config)
 {
   cr_redirect_stdout ();
+  setup_config (8080);
   message_buffers *bufs = setup (2, argv);
   cr_assert_not_null (bufs);
   fflush (stdout);

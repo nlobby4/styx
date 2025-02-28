@@ -3,6 +3,7 @@
 #include "cleanup.h"
 #include "config.h"
 #include "config.util.h"
+#include "errlog.h"
 #include "setup.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
@@ -48,4 +49,11 @@ Test (signals, sigterm_breaks)
   pthread_create (&thread, NULL, trigger_signal, NULL);
   run (bufs);
   pthread_join (thread, NULL);
+}
+
+Test (_, run_not_null, .timeout = 1)
+{
+  cr_redirect_stderr ();
+  run (NULL);
+  cr_assert_stderr_eq_str (ERROR_MSG ("bufs cannot be NULL\n"));
 }

@@ -90,6 +90,7 @@ request (message_buffers *bufs, connection_state *state)
   if (data == NULL)
     {
       state->code = BAD_REQUEST;
+      state->keep_alive = false;
       return data;
     }
   if (strcmp ("GET", data->method) && strcmp ("HEAD", data->method))
