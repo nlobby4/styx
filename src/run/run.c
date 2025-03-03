@@ -1,10 +1,11 @@
+#define _GNU_SOURCE
 #include "cleanup.h"
 #include "errlog.h"
 #include "globals.h"
 #include "handleconn.h"
 #include "mem.h"
-#include <aio.h>
 #include <sys/select.h>
+#include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -12,7 +13,6 @@ void
 run (message_buffers *bufs)
 {
   NULL_CHECK (bufs, );
-  struct timespec loop_limiter = { .tv_sec = 0, .tv_nsec = 10000 };
   while (running)
     {
       fd_set read_fds;
@@ -25,13 +25,17 @@ run (message_buffers *bufs)
           if (running)
             {
               free_bufs (bufs);
-              EXIT_ERROR (, "select failed");
+              EXIT_ERROR (, "select failed in parent process");
             }
           else
             break;
         }
       if (ret == 0 || !FD_ISSET (server, &read_fds))
-        continue;
+        {
+          while (waitpid (-1, NULL, WNOHANG) > 0)
+            ;
+          continue;
+        }
       connection = accept (server, (struct sockaddr *)&client_addr, &addr_len);
 
       if (connection == -1)
@@ -60,6 +64,6 @@ run (message_buffers *bufs)
           close (connection);
           connection = 0;
         }
-      nanosleep (&loop_limiter, NULL);
+      usleep (5000);
     }
 }

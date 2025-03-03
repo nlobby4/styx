@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "setup.h"
 #include "errlog.h"
 #include "mem.h"

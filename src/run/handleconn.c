@@ -40,7 +40,7 @@ handle_connection (message_buffers *bufs)
         {
           free_bufs (bufs);
           if (running)
-            EXIT_ERROR (, "select failed");
+            EXIT_ERROR (, "select failed in child process");
           else
             break;
         }
