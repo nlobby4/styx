@@ -1,4 +1,13 @@
-#pragma once
+/**
+ * @file config.h
+ * @author Alexsander d. S. Tenne
+ * @brief Contains the data structures and functions needed to
+ * parse the config json file and store its data.
+ * @version 1.0.0
+ * @date 2025-03-05
+ */
+#ifndef _CONFIG_H
+#define _CONFIG_H
 #include <inttypes.h>
 #include <sys/time.h>
 
@@ -16,3 +25,5 @@ typedef struct
 
 server_config config_make (const char *file_name);
 void config_destroy (server_config *config);
+
+#endif

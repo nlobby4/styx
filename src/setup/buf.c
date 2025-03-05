@@ -1,5 +1,5 @@
 #define _GNU_SOURCE
-#include "mem.h"
+#include "buf.h"
 #include "config.h"
 #include "errlog.h"
 #include "global_types.h"
@@ -8,23 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
-
-sockaddr_in_p
-make_ipv4 (server_config config)
-{
-  NULL_CHECK (config, NULL);
-  static struct sockaddr_in addr;
-  memset (&addr, 0, sizeof (addr));
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons (config->port);
-  int err = inet_pton (AF_INET, config->addr, &addr.sin_addr.s_addr);
-  if (err == 0 || err == -1)
-    {
-      config_destroy (&config);
-      EXIT_ERROR (NULL, "invalid ip address");
-    }
-  return &addr;
-}
 
 static void *
 allocate_buffer (buffer *buf)

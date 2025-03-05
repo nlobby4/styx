@@ -1,9 +1,9 @@
 #define _GNU_SOURCE
+#include "buf.h"
 #include "cleanup.h"
 #include "errlog.h"
 #include "globals.h"
 #include "handleconn.h"
-#include "mem.h"
 #include <sys/select.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -13,13 +13,13 @@ void
 run (message_buffers *bufs)
 {
   NULL_CHECK (bufs, );
+  fd_set current_fds, ready_fds;
+  FD_ZERO (&current_fds);
+  FD_SET (server, &current_fds);
   while (running)
     {
-      fd_set read_fds;
-      FD_ZERO (&read_fds);
-      FD_SET (server, &read_fds);
-
-      int ret = select (server + 1, &read_fds, NULL, NULL, &interval);
+      ready_fds = current_fds;
+      int ret = select (server + 1, &ready_fds, NULL, NULL, &interval);
       if (ret == -1)
         {
           if (running)
@@ -30,7 +30,7 @@ run (message_buffers *bufs)
           else
             break;
         }
-      if (ret == 0 || !FD_ISSET (server, &read_fds))
+      if (ret == 0 || !FD_ISSET (server, &ready_fds))
         {
           while (waitpid (-1, NULL, WNOHANG) > 0)
             ;

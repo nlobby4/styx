@@ -224,16 +224,19 @@ response (message_buffers *bufs, header_data *request_data,
                                   FORMAT_HEADER (400, "Bad Request"));
       code_msg = "Bad Request";
       break;
+
     case NOT_FOUND:
       result = buffer_append_str (HEADER (bufs),
                                   FORMAT_HEADER (404, "Not Found"));
       code_msg = "Not Found";
       break;
+
     case CONTENT_TOO_LARGE:
       result = buffer_append_str (HEADER (bufs),
                                   FORMAT_HEADER (413, "Payload Too Large"));
       code_msg = "Payload Too Large";
       break;
+
     case REQU_HEAD_FIELDS_TOO_LARGE:
       result = buffer_append_str (
           HEADER (bufs),
@@ -246,11 +249,13 @@ response (message_buffers *bufs, header_data *request_data,
                                   FORMAT_HEADER (501, "Not Implemented"));
       code_msg = "Not Implemented";
       break;
+
     case INSUFFICIENT_STORAGE:
       result = buffer_append_str (HEADER (bufs),
                                   FORMAT_HEADER (507, "Insufficient Storage"));
       code_msg = "Insufficient Storage";
       break;
+
     case OK:
       result = buffer_append_str (HEADER (bufs), FORMAT_HEADER (200, "Ok"))
                && buffer_append_str (HEADER (bufs), format_str);
@@ -259,6 +264,7 @@ response (message_buffers *bufs, header_data *request_data,
           bufs->resp.body.bytes_written = 0;
         }
       break;
+
     case INTERNAL_SERVER_ERROR:
     default:
       result = buffer_append_str (

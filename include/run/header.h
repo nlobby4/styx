@@ -1,3 +1,11 @@
+/**
+ * @file header.h
+ * @author Alexsander d. S. Tenne
+ * @brief Contains all data structures and functions required to parse a
+ * HTTP-request header and utilize said data structures.
+ * @version 1.0.0
+ * @date 2025-03-05
+ */
 #ifndef _HEADER_H
 #define _HEADER_H
 
@@ -31,8 +39,8 @@ typedef struct
   char *method;     /**< HTTP method (this implementation only supports GET and
                        HEAD). */
   char *path;       /**< The requested file path. */
-  char *version;    /** The HTTP version. */
-  header_vec h_vec; /** Header vector. */
+  char *version;    /**< The HTTP version. */
+  header_vec h_vec; /**< Header vector. */
 } header_data;
 
 /**

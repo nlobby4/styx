@@ -1,5 +1,5 @@
+#include "buf.h"
 #include "cleanup.h"
-#include "mem.h"
 #include "run.h"
 #include "setup.h"
 

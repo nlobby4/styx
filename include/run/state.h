@@ -1,6 +1,17 @@
-#pragma once
+/**
+ * @file state.h
+ * @author Alexsander d. S. Tenne
+ * @brief Small header file containing the data structures needed to track the
+ * state of an established HTTP-connection.
+ * @version 1.0.0
+ * @date 2025-03-05
+ */
+#ifndef _STATE_H
+#define _STATE_H
+
 #include <stdbool.h>
 #include <sys/types.h>
+
 typedef enum
 {
   CLOSE = -2,
@@ -22,3 +33,5 @@ typedef struct
   status code;
   int current_request;
 } connection_state;
+
+#endif

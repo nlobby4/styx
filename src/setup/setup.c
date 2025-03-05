@@ -1,7 +1,7 @@
 #define _GNU_SOURCE
 #include "setup.h"
+#include "buf.h"
 #include "errlog.h"
-#include "mem.h"
 #include <arpa/inet.h>
 #include <signal.h>
 #include <stdbool.h>
@@ -51,6 +51,24 @@ static_exists ()
   struct stat info;
   return stat (STATIC, &info) == 0 && S_ISDIR (info.st_mode);
 }
+
+sockaddr_in_p
+make_ipv4 (server_config config)
+{
+  NULL_CHECK (config, NULL);
+  static struct sockaddr_in addr;
+  memset (&addr, 0, sizeof (addr));
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons (config->port);
+  int err = inet_pton (AF_INET, config->addr, &addr.sin_addr.s_addr);
+  if (err == 0 || err == -1)
+    {
+      config_destroy (&config);
+      EXIT_ERROR (NULL, "invalid ip address");
+    }
+  return &addr;
+}
+
 message_buffers *
 setup (int argc, char const **argv)
 {

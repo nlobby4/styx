@@ -1,11 +1,13 @@
 /**
- * @file utils.h
- * @brief Small utility functions for the WebServer project
- *
- * Contains small helper functions that are used across the project.
+ * @file errlog.h
+ * @author Alexsander d. S. Tenne
+ * @brief Contains all utilities needed to log, format and deal with errors.
+ * @version 1.0.0
+ * @date 2025-03-05
  */
+#ifndef _ERRLOG_H
+#define _ERRLOG_H
 
-#pragma once
 #include <stdarg.h>
 
 /**
@@ -24,6 +26,7 @@
  * exits with error code 1.
  * @param error_msg A pointer to the unformatted message to be printed.
  * @param ... The variable arguments that help format the message.
+ * @note Does not exit in testing mode.
  */
 void exit_error (const char *error_msg, ...);
 
@@ -88,3 +91,5 @@ void exit_error (const char *error_msg, ...);
  * @param ... The variable arguments that help format the message.
  */
 void warning (const char *warning_msg, ...);
+
+#endif

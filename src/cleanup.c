@@ -1,6 +1,6 @@
+#include "buf.h"
 #include "errlog.h"
 #include "globals.h"
-#include "mem.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>

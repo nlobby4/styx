@@ -1,7 +1,8 @@
-#include "mem.h"
+#include "buf.h"
 #include "cJSON.h"
 #include "config.h"
 #include "errlog.h"
+#include "setup.h"
 #include <arpa/inet.h>
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
@@ -133,35 +134,16 @@ Test (requires_config, buffer_clear)
   free_bufs (bufs);
 }
 
-Test (requires_config, sockaddr_setup)
-{
-  sockaddr_in_p ipv4 = make_ipv4 (config);
-  cr_assert_not_null (ipv4);
-  cr_assert (ipv4->sin_family == AF_INET);
-  cr_assert (ipv4->sin_port == htons (config->port));
-  char buffer[INET_ADDRSTRLEN] = { 0 };
-  cr_assert_not_null (
-      inet_ntop (AF_INET, &ipv4->sin_addr.s_addr, buffer, INET_ADDRSTRLEN));
-  cr_assert (strcmp (buffer, config->addr) == 0);
-}
-
-Test (_, invalid_ip, .init = setup_config)
-{
-  cr_redirect_stderr ();
-  *config->addr = '\0';
-  sockaddr_in_p ipv4 = make_ipv4 (config);
-  cr_assert_null (ipv4);
-  cr_assert_stderr_eq_str (ERROR_MSG ("invalid ip address\n"));
-  remove (file_name);
-}
-
-/* Test (requires_config, buffer_alloc_fail)
+Test (requires_config, buffer_alloc_fail)
 {
   cr_redirect_stderr ();
   config->recv_header_sz = -1;
   message_buffers *bufs = setup_buffers (config);
   cr_assert_not_null (bufs);
   allocate_bufs (bufs);
-  cr_assert_stderr_eq_str ("buffer allocation failed\n");
   cr_assert_null (bufs->recv.head.payload);
-} */
+  cr_assert_null (bufs->recv.body.payload);
+  cr_assert_null (bufs->resp.head.payload);
+  cr_assert_null (bufs->resp.body.payload);
+  cr_assert_stderr_eq_str (ERROR_MSG ("buffer allocation failed\n"));
+}

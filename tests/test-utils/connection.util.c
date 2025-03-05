@@ -2,6 +2,7 @@
 #include "config.util.h"
 #include "globals.h"
 #include "pthread.h"
+#include "setup.h"
 #include <arpa/inet.h>
 #include <criterion/criterion.h>
 #include <unistd.h>

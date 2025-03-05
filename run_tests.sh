@@ -1,4 +1,6 @@
 #!/bin/bash
 
 ./build/Tests
-gcovr --root ../styx -j 10 --html-details -o coverage/ --exclude 'tests/*' --exclude 'src/main.c'
+if [[ "$1" == "--coverage" ]]; then
+    gcovr --root ../styx -j 10 --html-details -o coverage/ --exclude 'tests/*' --exclude 'src/main.c'
+fi

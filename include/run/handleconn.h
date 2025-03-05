@@ -1,7 +1,15 @@
+/**
+ * @file handleconn.h
+ * @author Alexsander d. S. Tenne
+ * @brief Small header file containing the handle_connection function, which is
+ * to be called when the listener socket has accepted a connection.
+ * @version 1.0.0
+ * @date 2025-03-05
+ */
 #ifndef _HANDLECONN_H
 #define _HANDLECONN_H
+#include "buf.h"
 #include "global_types.h"
-#include "mem.h"
 
 /**
  * @brief When a connection is established and the process is forked, this
