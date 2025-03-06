@@ -3,8 +3,8 @@
  * @author Alexsander d. S. Tenne
  * @brief Contains all global variables, which are all initialized in the setup
  * function.
- * @version 1.0.0
- * @date 2025-03-05
+ * @version 1.0.1
+ * @date 07/03/2025
  */
 #ifndef _GLOBALS_H
 #define _GLOBALS_H
@@ -16,25 +16,27 @@
 /**
  * @brief Main loop run condition.
  *
- * Set to 1 to run, 0 to stop.
- * @note Important for clean up.
+ * @note Important for clean up. The signal handlers for SIGINT and SIGTERM set
+ * this to 0.
  */
 extern volatile sig_atomic_t running;
-/**
- * @brief Global file descriptor for the listener socket.
- */
+
+/// @brief File descriptor for the listener socket.
 extern file_descriptor server;
-/**
- * @brief Global file descriptor for the connection socket.
- */
+
+/// @brief File descriptor for the connection socket.
 extern file_descriptor connection;
 
-/**
- * @brief Global interval for server time outs.
- */
+/// @brief Interval for server time outs.
 extern struct timeval interval;
+
+/// @brief Client address struct.
 extern struct sockaddr_in client_addr;
+
+/// @brief Client socket address length.
 extern socklen_t addr_len;
+
+/// @brief Process id.
 extern pid_t pid;
 
 #endif

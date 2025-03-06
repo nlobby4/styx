@@ -3,8 +3,8 @@
  * @author Alexsander d. S. Tenne
  * @brief Small header file containing the handle_connection function, which is
  * to be called when the listener socket has accepted a connection.
- * @version 1.0.0
- * @date 2025-03-05
+ * @version 1.0.1
+ * @date 07/03/2025
  */
 #ifndef _HANDLECONN_H
 #define _HANDLECONN_H

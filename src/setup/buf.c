@@ -68,6 +68,7 @@ free_bufs (message_buffers *bufs)
 static void
 clear_buffer (buffer *buf)
 {
+  NULL_CHECK (buf, );
   memset (buf->payload, 0, buf->size - 1);
   buf->bytes_written = 0;
 }

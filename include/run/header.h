@@ -3,8 +3,8 @@
  * @author Alexsander d. S. Tenne
  * @brief Contains all data structures and functions required to parse a
  * HTTP-request header and utilize said data structures.
- * @version 1.0.0
- * @date 2025-03-05
+ * @version 1.0.1
+ * @date 07/03/2025
  */
 #ifndef _HEADER_H
 #define _HEADER_H

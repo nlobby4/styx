@@ -3,8 +3,8 @@
  * @author Alexsander d. S. Tenne
  * @brief Small header file containing the response function, which is to be
  * called after the request function has parsed the client's HTTP-request.
- * @version 1.0.0
- * @date 2025-03-05
+ * @version 1.0.1
+ * @date 07/03/2025
  */
 #ifndef _RESPONSE_H
 #define _RESPONSE_H
