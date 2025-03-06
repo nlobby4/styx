@@ -28,14 +28,15 @@ handle_connection (message_buffers *bufs)
 #ifdef TEST
   state.timeout.tv_sec = 1;
 #endif
+  fd_set current_fds;
+  FD_ZERO (&current_fds);
+  FD_SET (connection, &current_fds);
   while (running && state.keep_alive && state.current_request > 0)
     {
+      fd_set ready_fds = current_fds;
+      struct timeval timeout = state.timeout;
 
-      fd_set read_fds;
-      FD_ZERO (&read_fds);
-      FD_SET (connection, &read_fds);
-
-      int ret = select (connection + 1, &read_fds, NULL, NULL, &state.timeout);
+      int ret = select (connection + 1, &ready_fds, NULL, NULL, &timeout);
       if (ret == -1)
         {
           free_bufs (bufs);
@@ -44,7 +45,7 @@ handle_connection (message_buffers *bufs)
           else
             break;
         }
-      if (ret == 0 || !FD_ISSET (connection, &read_fds))
+      if (ret == 0 || !FD_ISSET (connection, &ready_fds))
         {
           puts ("Connection terminated: timeout");
           break;

@@ -13,13 +13,14 @@ void
 run (message_buffers *bufs)
 {
   NULL_CHECK (bufs, );
-  fd_set current_fds, ready_fds;
+  fd_set current_fds;
   FD_ZERO (&current_fds);
   FD_SET (server, &current_fds);
   while (running)
     {
-      ready_fds = current_fds;
-      int ret = select (server + 1, &ready_fds, NULL, NULL, &interval);
+      fd_set ready_fds = current_fds;
+      struct timeval interval_copy = interval;
+      int ret = select (server + 1, &ready_fds, NULL, NULL, &interval_copy);
       if (ret == -1)
         {
           if (running)
@@ -64,6 +65,6 @@ run (message_buffers *bufs)
           close (connection);
           connection = 0;
         }
-      usleep (5000);
+      // usleep (5000);
     }
 }
