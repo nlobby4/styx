@@ -216,7 +216,7 @@ response (message_buffers *bufs, header_data *request_data,
             strcat (format_str, temp);
         }
     }
-  const char *code_msg;
+  const char *code_msg = "";
   switch (state->code)
     {
     case BAD_REQUEST:

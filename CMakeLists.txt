@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 project(Styx)
+
 # Build cJSON as static library
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 include(FetchContent)
@@ -11,10 +12,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(cjson)
 
-# Tests are not built by default
-option(BUILD_TESTS "Build test files? (Criterion install is needed)" OFF)
+set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
 
-# Recursively collect all .c files in the src directory and its subdirectories
 file(GLOB_RECURSE DEBUG_SOURCES ${PROJECT_SOURCE_DIR}/src/*.c)
 file(GLOB_RECURSE RELEASE_SOURCES ${PROJECT_SOURCE_DIR}/src/*.c)
 list(REMOVE_ITEM RELEASE_SOURCES ${PROJECT_SOURCE_DIR}/src/utils/debug.c)
@@ -26,8 +25,11 @@ add_compile_options(-Wall -Wextra -pedantic)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_executable(${PROJECT_NAME} ${DEBUG_SOURCES})
     target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG)
+
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_executable(${PROJECT_NAME} ${RELEASE_SOURCES})
+elseif(CMAKE_BUILD_TYPE STREQUAL "Test")
+    set(BUILD_TESTS ON)
 else()
     message(STATUS "Unknown build type: ${CMAKE_BUILD_TYPE}")
 endif()
@@ -35,15 +37,15 @@ set(CMAKE_C_FLAGS_DEBUG "-g -fsanitize=undefined,address")
 set(CMAKE_C_FLAGS_RELEASE "-O2 -Werror")
 set(CMAKE_C_FLAGS_TEST "-g -fsanitize=undefined,address -fprofile-arcs -ftest-coverage" CACHE STRING "")
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/setup)
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/utils)
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/run)
-target_include_directories(${PROJECT_NAME} PRIVATE ${cjson_SOURCE_DIR})
-target_link_libraries(${PROJECT_NAME} cjson)
-
+if(NOT BUILD_TESTS)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/setup)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/utils)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include/run)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${cjson_SOURCE_DIR})
+    target_link_libraries(${PROJECT_NAME} cjson)
+else()
 enable_testing()
-if(BUILD_TESTS)
     file(GLOB_RECURSE TEST_SOURCES ${PROJECT_SOURCE_DIR}/tests/*.c)
     list(APPEND TEST_SOURCES ${DEBUG_SOURCES})
     list(REMOVE_ITEM TEST_SOURCES ${PROJECT_SOURCE_DIR}/src/main.c)
