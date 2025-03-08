@@ -65,6 +65,5 @@ run (message_buffers *bufs)
           close (connection);
           connection = 0;
         }
-      // usleep (5000);
     }
 }

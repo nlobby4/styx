@@ -9,22 +9,23 @@ A dead simple HTTP server written in C
 
 - [About the Project](#about-the-project)
 - [Getting Started](#getting-started)
-  - [Build System](#build-system)
+  - [Build Systems](#build-systems)
   - [Dependencies](#dependencies)
     - [Mandatory](#mandatory)
     - [Optional](#optional)
   - [Building the Project](#building-the-project)
 - [Usage](#usage)
 - [Running Tests](#running-tests)
+- [Supported MIME types](#supported-mime-types)
 - [License](#license)
 
 ## About the Project
 
-Styx is a lightweight and straightforward HTTP server for Linux written in C, designed to serve static files with minimal configuration. It is designed with local web development in mind, supporting various commonly used MIME types.
+Styx is a lightweight and straightforward HTTP server for Linux written in C, designed to serve static files with minimal configuration. It is designed with local web development in mind, supporting various commonly used [MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types).
 
 ## Getting Started
 
-### Build System
+### Build Systems
 
 This is what you will need to build the project:
 
@@ -82,6 +83,9 @@ Running it without one of these two will result in an error, which gracefully ex
 }
 ```
 
+> [!NOTE]
+> Every property ending in "sz" is in bytes.
+
 Having set everything up, you can now just run
 
 ```sh
@@ -102,6 +106,35 @@ You can run all tests with
 > For expected test behavior, ports 8080-8095 need to be free. If this is not possible, you can manually change them inside the test source files at your own risk.
 >
 > Also, since some tests generate JSON files, there is a clear_jsons.sh script, which you can use, should any of the tests fail to clear them up. It erases any .json files from your current directory, excluding "serverconfig.json".
+
+## Supported MIME types
+
+Here's a list of all MIME types supported by the Styx server:
+
+- html/htm
+- css
+- js/mjs
+- avif
+- ico
+- jpeg/jpg
+- mp3
+- mp4
+- mpeg
+- otf
+- ttf
+- png
+- pdf
+- svg
+- txt
+- wav
+- weba
+- webm
+- webp
+- xml
+- json/jsonld
+- gif
+
+All other file endings are sent under the `application/octet-stream` MIME type.
 
 ## License
 
