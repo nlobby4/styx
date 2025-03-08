@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
-./build/Styx
+./build/Styx $1

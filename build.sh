@@ -1,16 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 
 build_types="--debug | --release | --test"
-cmake_build_type=""
 
-if [[ $# -ne 1 ]]; then
+if [ "$#" -ne 1 ]; then
     echo "Specify build type: $build_types"
     exit 1
-elif [[ $1 == "--debug" ]]; then
+elif [ "$1" = "--debug" ]; then
     cmake_build_type="Debug"
-elif [[ $1 == "--release" ]]; then
+elif [ "$1" = "--release" ]; then
     cmake_build_type="Release"
-elif [[ $1 == "--test" ]]; then
+elif [ "$1" = "--test" ]; then
     cmake_build_type="Test"
 else
     echo "Invalid build type: \"$1\". Valid build types: $build_types"

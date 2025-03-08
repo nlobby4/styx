@@ -1,0 +1,37 @@
+<svg fill="none" viewBox="0 0 221 128" height="115" xmlns="http://www.w3.org/2000/svg">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style>
+        span {
+          font-family: "Courier New";
+          font-size: 12pt;
+          line-height: 1;
+          display: block;
+          color: #F8F9FA;
+          white-space: pre;
+          font-weigth: bold;
+        }
+
+        @media (prefers-color-scheme: light) {
+          span {
+            color: #6C757D;
+          }
+        }
+      </style>
+
+      <div>
+        <span></span>
+        <span>                       </span>
+        <span>  ____  _              </span>
+        <span> / ___|| |_ _   ___  __</span>
+        <span> \___ \| __| | | \ \/ /</span>
+        <span>  ___) | |_| |_| |&gt;  &lt; </span>
+        <span> |____/ \__|\__, /_/\_\</span>
+        <span>            |___/      </span>
+        <span>                       </span>
+        <span></span>
+      </div>
+    </div>
+  </foreignObject>
+</svg>
+  

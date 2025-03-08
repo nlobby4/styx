@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 ./build/Tests
 if [[ "$1" == "--coverage" ]]; then

@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.22.1)
+cmake_minimum_required(VERSION 3.11)
 project(Styx)
 
 # Build cJSON as static library
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
 include(FetchContent)
 FetchContent_Declare(
     cjson
