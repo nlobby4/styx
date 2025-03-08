@@ -5,43 +5,18 @@
 
 A dead simple HTTP server written in C
 
-<details>
-  <summary>
-  Table of contents
-  </summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">
-        About the Project
-      </a>
-    </li>
-    <li>
-      <a href="#getting-started">
-        Getting Started
-      </a>
-      <ul>
-        <li>
-          <a href="#build-system">Build System</a>
-        </li>
-        <li>
-          <a href="#dependencies">Dependencies</a>
-        </li>
-        <li>
-          <a href="#building-the-project">Building the Project</a>
-        </li>
-        <li>
-          <a href="#usage">Usage</a>
-        </li>
-        <li>
-          <a href="#running-tests">Running Tests</a>
-        </li>
-      </ul>
-    </li>
-    <li>
-      <a href="#license">License</a>
-    </li>
-  </ol>
-</details>
+### Table of contents
+
+- [About the Project](#about-the-project)
+- [Getting Started](#getting-started)
+  - [Build System](#build-system)
+  - [Dependencies](#dependencies)
+    - [Mandatory](#mandatory)
+    - [Optional](#optional)
+  - [Building the Project](#building-the-project)
+- [Usage](#usage)
+- [Running Tests](#running-tests)
+- [License](#license)
 
 ## About the Project
 
@@ -84,7 +59,7 @@ with
 
 being valid build flags. This can generate two different binaries in the build directory, one being the regular program, the other being the tests.
 
-### Usage
+## Usage
 
 > [!IMPORTANT]
 > To run the program, you will need two things:
@@ -115,7 +90,7 @@ Having set everything up, you can now just run
 
 and see for yourself!
 
-### Running Tests
+## Running Tests
 
 You can run all tests with
 
