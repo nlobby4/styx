@@ -14,12 +14,15 @@
 
 #ifndef TEST
 #define STATIC "static"
+
 #else
 #define STATIC "tests/static"
 #endif
+
 #define TCP 0
 #define DEFAULT_PATH "serverconfig.json"
 
+// initialize globals
 file_descriptor server = 0, connection = 0;
 struct timeval interval;
 volatile sig_atomic_t running = 1;
@@ -59,7 +62,9 @@ make_ipv4 (server_config config)
   static struct sockaddr_in addr;
   memset (&addr, 0, sizeof (addr));
   addr.sin_family = AF_INET;
+  // correct port notation
   addr.sin_port = htons (config->port);
+  // correct ip notation
   int err = inet_pton (AF_INET, config->addr, &addr.sin_addr.s_addr);
   if (err == 0 || err == -1)
     {
@@ -106,7 +111,7 @@ setup (int argc, char const **argv)
       exit_error ("cannot set socket options");
 #endif
     }
-  // set server struct
+  // init server address struct
   sockaddr_in_p addr = make_ipv4 (config);
   NULL_CHECK (addr, NULL);
   // bind server to socket and listen

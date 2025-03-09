@@ -10,15 +10,13 @@ void
 cleanup (message_buffers *bufs)
 {
   NULL_CHECK (bufs, );
-  int status;
-
   if (pid != 0)
     {
       close (server);
 #ifdef TEST
       server = 0;
 #endif
-      wait (&status);
+      wait (NULL);
       puts ("\nClosing server...");
     }
   else

@@ -175,7 +175,7 @@ server_config
 config_make (const char *file_name)
 {
   NULL_CHECK (file_name, NULL);
-  server_config config = calloc (1, sizeof (*config));
+  server_config config = malloc (sizeof (*config));
   if (config == NULL)
     {
       EXIT_ERROR (NULL, "cannot allocate memory for config");

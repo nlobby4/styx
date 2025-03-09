@@ -179,13 +179,20 @@ response (message_buffers *bufs, header_data *request_data,
   // request_data can be NULL
   NULL_CHECK (bufs, );
   NULL_CHECK (state, );
+
+  // buffer append can fail
   bool result = false;
+
+  // some string buffers to store format messages
   char format_str[BUFSIZ] = { '\0' };
   char temp[BUFSIZ] = { '\0' };
   int current_size = BUFSIZ - 1;
+
   if (state->code == NOT_PROCESSED)
     {
       state->code = buffer_read_file (&bufs->resp.body, request_data->path);
+
+      // prepare response header
       if (state->code == OK)
         {
           current_size -= snprintf (format_str, current_size,
@@ -199,8 +206,11 @@ response (message_buffers *bufs, header_data *request_data,
               warning ("format buffer size exceeded");
               state->code = INTERNAL_SERVER_ERROR;
             }
+
+          // check if connection should be kept alive
           if (state->current_request == state->max_requests
               && state->keep_alive)
+            // copy into temp string
             current_size
                 -= snprintf (temp, current_size,
                              "Connection: Keep-Alive\r\n"
@@ -213,9 +223,11 @@ response (message_buffers *bufs, header_data *request_data,
               state->code = INTERNAL_SERVER_ERROR;
             }
           else
+            // append temp string to actual
             strcat (format_str, temp);
         }
     }
+  // variable used for the error html
   const char *code_msg = "";
   switch (state->code)
     {
@@ -259,8 +271,9 @@ response (message_buffers *bufs, header_data *request_data,
     case OK:
       result = buffer_append_str (HEADER (bufs), FORMAT_HEADER (200, "Ok"))
                && buffer_append_str (HEADER (bufs), format_str);
-      if (!strcmp ("HEAD", request_data->method))
+      if (strcmp ("HEAD", request_data->method) == 0)
         {
+          // body does not get sent if this is 0
           bufs->resp.body.bytes_written = 0;
         }
       break;
@@ -270,6 +283,8 @@ response (message_buffers *bufs, header_data *request_data,
       result = buffer_append_str (
           HEADER (bufs), FORMAT_HEADER (500, "Internal Server Error"));
       code_msg = "Internal Server Error";
+
+      // This should never happen
 #ifdef DEBUG
       if (state->code != INTERNAL_SERVER_ERROR)
         warning ("invalid status state->code %d", state->code);
@@ -277,14 +292,15 @@ response (message_buffers *bufs, header_data *request_data,
     }
 
   size_t error_len = 0;
+  // format and copy the error html and it's content-type and -length
   if (state->code != OK)
     {
-
       memset (format_str, 0, BUFSIZ);
       sprintf (format_str, error_html, state->code, code_msg, state->code,
                code_msg);
       error_len = strlen (format_str);
       result = result && buffer_append_str (BODY (bufs), format_str);
+
       memset (format_str, 0, BUFSIZ);
       sprintf (format_str,
                "Content-Type: text/html\r\nContent-Length: %lu\r\n",

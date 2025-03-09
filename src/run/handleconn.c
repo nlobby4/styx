@@ -15,6 +15,7 @@ void
 handle_connection (message_buffers *bufs)
 {
   NULL_CHECK (bufs, );
+  // child process should not use listener socket
   close (server);
   server = 0;
   allocate_bufs (bufs);
@@ -33,9 +34,10 @@ handle_connection (message_buffers *bufs)
   FD_SET (connection, &current_fds);
   while (running && state.keep_alive && state.current_request > 0)
     {
+      // init temp variables for select(), since it's destructive
       fd_set ready_fds = current_fds;
       struct timeval timeout = state.timeout;
-
+      // wait for connection, non blocking
       int ret = select (connection + 1, &ready_fds, NULL, NULL, &timeout);
       if (ret == -1)
         {
@@ -56,9 +58,11 @@ handle_connection (message_buffers *bufs)
         {
           response (bufs, request_data, &state);
         }
+
       free_data (request_data);
       if (state.keep_alive)
         {
+          // prepare for next message
           --state.current_request;
           state.code = NOT_PROCESSED;
           clear_bufs (bufs);

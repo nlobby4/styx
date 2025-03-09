@@ -18,8 +18,10 @@ run (message_buffers *bufs)
   FD_SET (server, &current_fds);
   while (running)
     {
+      // init temp variables for select(), since it's destructive
       fd_set ready_fds = current_fds;
       struct timeval interval_copy = interval;
+      // wait for connection, non blocking
       int ret = select (server + 1, &ready_fds, NULL, NULL, &interval_copy);
       if (ret == -1)
         {
@@ -33,10 +35,12 @@ run (message_buffers *bufs)
         }
       if (ret == 0 || !FD_ISSET (server, &ready_fds))
         {
+          // reap child processes
           while (waitpid (-1, NULL, WNOHANG) > 0)
             ;
           continue;
         }
+
       connection = accept (server, (struct sockaddr *)&client_addr, &addr_len);
 
       if (connection == -1)
