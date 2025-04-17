@@ -1,6 +1,6 @@
 /**
  * @file globals.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains all global variables, which are all initialized in the setup
  * function.
  * @version 1.0.1

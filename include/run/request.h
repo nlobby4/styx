@@ -1,6 +1,6 @@
 /**
  * @file request.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Small header file containing the request function, which is to be
  * called when wanting to read from a socket and parse it as a HTTP-request.
  * @version 1.0.1

@@ -1,6 +1,4 @@
 build
-Styx
-Tests
 .vscode
 static/*
 coverage

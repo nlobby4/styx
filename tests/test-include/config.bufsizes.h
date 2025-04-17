@@ -1,6 +1,6 @@
 /**
  * @file config.bufsizes.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Small header file containing test config buffer sizes, needed for
  * when a test file needs to know them.
  * @version 1.0.1

@@ -1,6 +1,6 @@
 /**
  * @file buf.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains the data structures and functions needed to
  * store the raw HTTP data.
  * @version 1.0.1

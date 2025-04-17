@@ -1,6 +1,6 @@
 /**
  * @file cleanup.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Small header file containing the cleanup function, which is to be
  * called before exiting the program, in order to free up any ressources.
  * @version 1.0.1

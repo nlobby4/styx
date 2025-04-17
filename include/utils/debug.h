@@ -1,6 +1,6 @@
 /**
  * @file debug.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Dedicated header file for debug only functions (typically logging
  * functions).
  * @version 1.0.1

@@ -1,6 +1,6 @@
 /**
  * @file header.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains all data structures and functions required to parse a
  * HTTP-request header and utilize said data structures.
  * @version 1.0.1

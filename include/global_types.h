@@ -1,6 +1,6 @@
 /**
  * @file global_types.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains global type definitions.
  * @version 1.0.1
  * @date 07/03/2025

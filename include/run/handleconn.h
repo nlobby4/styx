@@ -1,6 +1,6 @@
 /**
  * @file handleconn.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Small header file containing the handle_connection function, which is
  * to be called when the listener socket has accepted a connection.
  * @version 1.0.1

@@ -1,6 +1,6 @@
 /**
  * @file config.util.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains setup and teardown functions for setting and cleaning up a
  * connection to the server via a seperate thread.
  * @version 1.0.1

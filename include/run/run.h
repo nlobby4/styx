@@ -1,6 +1,6 @@
 /**
  * @file run.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Small header file containing the run function, which runs the main
  * loop of the program.
  * @version 1.0.1

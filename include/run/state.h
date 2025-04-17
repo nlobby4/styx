@@ -1,6 +1,6 @@
 /**
  * @file state.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Small header file containing the data structures needed to track the
  * state of an established HTTP-connection.
  * @version 1.0.1

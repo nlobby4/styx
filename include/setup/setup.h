@@ -1,6 +1,6 @@
 /**
  * @file setup.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains the functions needed to setup the styx web server.
  * @version 1.0.1
  * @date 07/03/2025

@@ -1,6 +1,6 @@
 /**
  * @file response.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Small header file containing the response function, which is to be
  * called after the request function has parsed the client's HTTP-request.
  * @version 1.0.1

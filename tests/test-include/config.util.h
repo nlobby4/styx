@@ -1,6 +1,6 @@
 /**
  * @file config.util.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains setup and teardown functions for creating config files
  * unique to the test, aswell as some external variable definitions needed for
  * said tests.

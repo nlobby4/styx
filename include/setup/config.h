@@ -1,6 +1,6 @@
 /**
  * @file config.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains the data structures and functions needed to
  * parse the config JSON file and store its data.
  * @version 1.0.1

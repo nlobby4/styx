@@ -1,6 +1,6 @@
 /**
  * @file errlog.h
- * @author Alexsander d. S. Tenne
+ * @author -
  * @brief Contains all utilities needed to log, format and deal with errors.
  * @version 1.0.1
  * @date 07/03/2025
